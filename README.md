@@ -13,8 +13,8 @@ pip install .
 ## Prepare DB
 
 ```
-aws s3 cp --recursive xx db
-aws s3 cp --recursive xx data
+aws s3 cp --recursive s3://zhaoc1-metaquery/2022-metaquery/metaquery/db db
+aws s3 cp --recursive s3://zhaoc1-metaquery/2022-metaquery/metaquery/data data
 ```
 
 ## Test Run
