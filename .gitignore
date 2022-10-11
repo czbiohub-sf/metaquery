@@ -1,0 +1,5 @@
+build/
+data/
+db/
+metaquery.egg-info/
+
