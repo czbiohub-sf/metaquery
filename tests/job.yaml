@@ -1,0 +1,9 @@
+job_id: MQ000001
+outdir: tests
+molecule_type: protein
+max_evalue: 1e-5
+min_score: 70
+min_pid: 95
+min_qcov: 70
+min_tcov: 10
+threads: 8
