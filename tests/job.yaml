@@ -5,5 +5,5 @@ max_evalue: 1e-5
 min_score: 70
 min_pid: 95
 min_qcov: 70
-min_tcov: 10
+min_tcov: 70
 threads: 8
