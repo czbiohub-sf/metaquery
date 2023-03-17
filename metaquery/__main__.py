@@ -20,11 +20,13 @@ def launch_job(args):
         export(args)
 
 
+
 def main():
     p = argparse.ArgumentParser(prog="metaquery ", description='Run metaquery')
     p.add_argument("--job_yaml", required=True, type=str, help="Path to job yaml")
     p.add_argument("--query", required=True, type=str, help="Path to query fasta file")
     args = p.parse_args()
+
     raw_yaml_fp = args.job_yaml
     raw_seq_fp = args.query
 
