@@ -1,15 +1,19 @@
 ## 2023-03-17
 
 # libraries
-import os, time, sys, urllib2, subprocess, cgi, cgitb, tempfile
+import os, time, sys, subprocess, cgi, cgitb, tempfile
+import argparse
+from pathlib import Path
+from hashlib import md5
+import shutil
+# import urllib2 #<--- import error for now
 import sqlite3
 from collections import defaultdict
-from metaquery.src.model import config, temp_dirm get_Rscript
+from metaquery.src.model import config, temp_dir, get_Rscript
 from metaquery.src.igctools import sqlite3_connect
 
 
-cgitb.enable()
-
+#cgitb.enable() #<----- TODO: comment off for now
 
 def search_results_html(message, table):
     print("""
@@ -94,10 +98,10 @@ def search_results_html(message, table):
     </body>
     </html>
     """ % (message, table))
-    exit()
+    #exit() #<---- WHY??
 
 
-def build_table(rows, id = "table"):
+def build_table(rows, cursor, id = "table"):
     table="<table id=%s class='table table-striped table-bordered' cellspacing='0'>" % id
     table += '<thead><tr>'
     table += ''.join(['<th> %s </th>' % i[0] for i in cursor.description])
@@ -334,16 +338,16 @@ def fetch_results(cursor):
 
 def make_plots(args):
     if args['mean_abundance'] > 0:
-        plotdir = args.plotdir
+        plotdir = args["plotdir"]
         Rdir = get_Rscript()['plot_by_name']
         pfunc_dir = get_Rscript()["pfunc"]
         local_db = config['sqlite_db']
-        command = f"Rscript {Rdir} {args.type} {args.database} {args.level} {args.name} {plotdir} {local_db} {pfunc_dir}"
+        command = f"Rscript {Rdir} {args['type']} {args['database']} {args['level']} {args['name']} {plotdir} {local_db} {pfunc_dir}"
         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         process.wait()
         ## Specify the local path
-        args['abundance_plot'] = f"{plotdir}/{args.name}.abundance.png" #<--- "/plot/%(tempdir)s/%(name)s.abundance.png"
-        args['prevalence_plot'] = f"{plotdir}/{args.name}.prevalence.png"
+        args['abundance_plot'] = f"{plotdir}/{args['name']}.abundance.png" #<--- "/plot/%(tempdir)s/%(name)s.abundance.png"
+        args['prevalence_plot'] = f"{plotdir}/{args['name']}.prevalence.png"
         #args['abundance_plot'] = '<br><img style="display: block; margin: 0 auto" src="/plot/%(tempdir)s/%(name)s.abundance.png" align="middle"><br><br>' % args
         #args['prevalence_plot'] = '<br><img style="display: block; margin: 0 auto" src="/plot/%(tempdir)s/%(name)s.prevalence.png" align="middle"><br><br>' % args
     else:
@@ -352,28 +356,28 @@ def make_plots(args):
     return args
 
 
-def build_pheno_talbe(cursor, args):
+def report_by_name(args):
 
-
-if __name__ == '__main__':
-
-    p = argparse.ArgumentParser(prog="search ", description='search by name')
-    p.add_argument('--search_name', dest='search_name', type=str, help="Search by NAME")
+    #form = cgi.FieldStorage() #<-- maybe we don't need this term anymore, TODO: comment off for now
 
     conn, cursor = sqlite3_connect(config['sqlite_db'])
-    search_name = args.search_name.replace(" ", "_")
+    search_term1 = args.search_name.replace(" ", "_")
 
-    form = cgi.FieldStorage() #<-- maybe we don't need this term anymore
+    #search_term1 = form.getvalue('search_term')
+    search_term2 = search_term1.replace(' ', '_')
 
-    search_term1 = "Bacteroides vulgatus"
+    # TODO: didn't consider edge case: no search results
+    #search_term1 = "Bacteroides vulgatus"
     #search_term1 = "ABC Transporter"
     #search_term1 = "K00001"
 
-    search_term1 = form.getvalue('search_term')
-    search_term2 = search_term1.replace(' ', '_')
-
     cursor.execute("SELECT type, database, level, name, description FROM annotations WHERE name like ? or name like ? or description like ?", ('%'+search_term1+'%', '%'+search_term2+'%', '%'+search_term1+'%'))
     _rows = cursor.fetchall()
+    #print(_rows)
+
+    if len(_rows) == 0:
+        print("EMPTY SEARCH BY NAME RESULTS")
+        return
 
     # let's ignore the special meaning of double quote for now.
     rows = []
@@ -382,7 +386,7 @@ if __name__ == '__main__':
         # TODO: check if we can remove calling report_by_name.py within the web
         rows.append(("<a href='report_by_name.py?type=" + type + "&db=" + database + "&level=" + level + "&name=" + name + "'><b>Report</b></a>", ))
         ## Move report_by_name::fetch_args here
-        myargs = dict(zip(["type", "databasee", "level", "name"],[type, database, level, name]))
+        myargs = dict(zip(["type", "database", "level", "name"],[type, database, level, name]))
         # add abundance metric
         if myargs['type'] == 'taxa': myargs['metric'] = 'proportion of cells'
         else: myargs['metric'] = 'gene copies per cell'
@@ -400,14 +404,22 @@ if __name__ == '__main__':
         for row in fetch_results(cursor):
             for field, value in row.items():
                 myargs[field] = value
-        print(f"search::fetch_args::myargs: {myargs}")
-        ## HERE: we can also handle the output file
-        curr_outdir = f"temp_dir/{search_name}" #<--- TODO: should this be a jobid? if so, how to pass the parameter?
-        myargs['tempdir'] = f"temp_dir/{search_name}" #<---- why not call it outdir ...
-        myargs['plotdir'] = f"{temp_dir}/htdocs/plot"
-        tempfile.mkdtemp(dir = myargs['plotdir'])
-        args = make_plots(args)
-        print(f"after making plots args: {args}")
+        #print(f"search::fetch_args::myargs: {myargs}")
+        ################ Output Directory: need to introduce randomness.
+        search_hash = md5(search_term1.encode('utf-8')).hexdigest()[-6:]
+        curr_outdir = f"{temp_dir}/{search_term1}_{search_hash}"
+        myargs['plotdir'] = tempfile.mkdtemp(dir=curr_outdir)
+        myargs['tempdir'] = myargs['plotdir'] #<---- why not call it outdir ...
+        ## TODO: anything related to /plot/%(tempdir)s need to be renamed
+        myargs['plotdir'] = myargs['plotdir']
+        outdir = Path(myargs['plotdir'])
+        #if outdir.exists() and outdir.is_dir():
+        #    shutil.rmtree(outdir)
+        #outdir.mkdir(parents=True, exist_ok=True)
+        #tempfile.mkdtemp(dir = myargs['plotdir']) #<--- this introduce random tempdir, /tmp/tmpnbnk6oih
+        print(f"\n\nbefore making plot args: {myargs}")
+        args = make_plots(myargs)
+        print(f"\n\nafter making plots args: {args}\n\n")
         ############# build_pheno_table
         cursor.execute("SELECT phenotype, country, case_n, ctrl_n, case_mean, ctrl_mean, p_value, rank, percentile from pheno_tests WHERE type = ? AND database = ? AND level = ? AND name = ?", (type, database, level, name))
         tables = {}
@@ -420,14 +432,17 @@ if __name__ == '__main__':
             percentile = '%s' % float('%.2g' % row[8])
             pheno_table.append((row[0],row[1],row[2], row[3], case_mean, ctrl_mean, p_value, row[7], percentile))
         tables['pheno_table'] = pheno_table
-        with open(f"{curr_outdir}/pheno_table.tsv", "w") as stream:
+        with open(f"{myargs['plotdir']}/pheno_table.tsv", "w") as stream:
+            stream.write('\t'.join(['phenotype', 'country', 'case_n', 'ctrl_n', 'case_mean', 'ctrl_mean', 'p_value', 'rank', 'percentile']) + '\n')
             for row in pheno_table:
                 stream.write('\t'.join([str(v) for v in row])+'\n')
+        print(f"pheno_table.tsv have been writeen to {curr_outdir}/pheno_table.tsv")
         # Let's write to the same local directory for now. And check back later with the front end.
         #dict_of_args[] = myargs # not sure we need to save it, which was passed onto
 
-    table = build_table(rows)
-    print(table)
+    if False: # TODO: frontend
+        table = build_table(rows, cursor)
+        print(table)
 
     if len(rows):
         message = """
@@ -443,3 +458,6 @@ if __name__ == '__main__':
 
     # TODO: comment off for now. Check with
     #search_results_html(message, table)
+
+if __name__ == '__main__':
+    main()
