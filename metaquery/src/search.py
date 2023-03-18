@@ -436,7 +436,7 @@ def report_by_name(args):
             stream.write('\t'.join(['phenotype', 'country', 'case_n', 'ctrl_n', 'case_mean', 'ctrl_mean', 'p_value', 'rank', 'percentile']) + '\n')
             for row in pheno_table:
                 stream.write('\t'.join([str(v) for v in row])+'\n')
-        print(f"pheno_table.tsv have been writeen to {curr_outdir}/pheno_table.tsv")
+        print(f"pheno_table.tsv have been writeen to {myargs['plotdir']}/pheno_table.tsv")
         # Let's write to the same local directory for now. And check back later with the front end.
         #dict_of_args[] = myargs # not sure we need to save it, which was passed onto
 
