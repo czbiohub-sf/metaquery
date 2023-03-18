@@ -28,14 +28,13 @@ read.pheno.data <- function(outdir, local_db, job_id, pheno, country){
 
   df <- left_join(abun, sample_to_subject, by=c("sample_id")) %>%
     group_by(subject_id) %>%
-    summarize(abundance = mean(copy)) %>% # <---------- this is the OG
-    #summarize(copy_number = mean(copy), relative_abundance = mean(relabun)) %>%
+    summarize(abundance = mean(copy)) %>%
     ungroup()
 
   pheno_to_subjects <- dbGetQuery(local_db, 'SELECT * FROM pheno_to_subjects WHERE phenotype = :x AND country = :y', list(x = pheno, y = country)) %>%
     mutate(status = ifelse(status==0, "control", "case"))
 
-  df <- left_join(df, pheno_to_subjects, by=c("subject_id"))
+  df <- left_join(df, pheno_to_subjects, by=c("subject_id")) %>% filter(!is.na(phenotype))
   return(df)
 }
 
@@ -73,7 +72,6 @@ set.par <- function(){
   par(mfrow=c(1,2))
   par(mar=c(7,7,1.5,1.5))
   par(bg = 'gray99')
-
 }
 
 plot.prevalence <- function(abun, back, type, name){
@@ -84,7 +82,7 @@ plot.prevalence <- function(abun, back, type, name){
   png(plot_name, width=width, height = width*0.5)
   set.par()
 
-  sample.prev <- compute.prev(abun$copy_number)
+  sample.prev <- compute.prev(abun[,2])
   barplot(
     sample.prev$percent_samples, col='gray',
     xlab='', ylab='Prevalence (% of samples)', main='',
@@ -153,10 +151,8 @@ plot.abundance <- function(abun, back, type, name){
   png(plot_name, width=width, height=width*0.5)
   set.par()
 
-  # CZ: I added this line,
-  #abun <- abun %>% mutate(copy_number = copy_number + 1e-06)
   hist(
-    log10(abun$copy_number), col='gray',
+    log10(abun[,2]), col='gray',
     xlab='', ylab='Number of Samples', main='',
     cex.lab=2, cex.axis=1.75,
     xaxt='n', breaks=30
@@ -174,7 +170,7 @@ plot.abundance <- function(abun, back, type, name){
   ranks <- seq(1, length(indexes))
   back[indexes, 'rank'] <- ranks
 
-  mean_abun <- mean(abun$copy_number) #abun[,2]
+  mean_abun <- mean(abun[,2])
   rank <- length(which(mean_abun < abuns)) + 1
   plot(
     ranks, log10(abuns),

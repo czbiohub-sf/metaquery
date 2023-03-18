@@ -5,6 +5,32 @@ base_dir = os.getcwd() # local path of metaquery folder
 db_dir = os.path.join(base_dir, "db")
 data_dir = os.path.join(base_dir, "data")
 src_dir = os.path.join(base_dir, "metaquery", "src")
+temp_dir = os.path.join(base_dir, "temp")
+
+
+# Executable Documentation
+def get_output_layout(token_id):
+    return {
+        "job_id":               f"{token_id}",
+        "outdir":               f"{token_id}",
+        "job_to_m8":            f"{token_id}/job_to_m8", #store_alignments
+        "job_to_homologs":      f"{token_id}/job_to_homologs", #store_homologs
+        "homolog_to_abun":      f"{token_id}/homolog_to_abun", #store_homolog_abun
+        "job_to_abun":          f"{token_id}/job_to_abun", #store_gene_family
+        "genus_to_abun":        f"{token_id}/genus_to_abun", #store_genera
+    }
+
+
+def get_Rscript():
+    return {
+        "pheno": f"{src_dir}/pheno.R",
+        "taxa": f"{src_dir}/taxa.R",
+        "table": f"{src_dir}/table.R",
+        "plot": f"{src_dir}/plot.R",
+        "pfunc": f"{src_dir}/pfunc.R",
+        "export": f"{src_dir}/export.R",
+        "plot_by_name": f"{src_dir}/plot_by_name.R",
+    }
 
 
 job_form = {
@@ -16,7 +42,7 @@ job_form = {
     "min_score": 70,
     "min_pid": 95,
     "min_qcov": 70,
-    "min_tcov": 10,
+    "min_tcov": 70,
     "threads": 8,
 }
 
@@ -61,28 +87,4 @@ def get_args(form=job_form):
         'rapdb': config['rapdb'],
 
         'min_reads':4000000,
-    }
-
-
-def get_Rscript():
-    return {
-        "pheno": f"{src_dir}/pheno.R",
-        "taxa": f"{src_dir}/taxa.R",
-        "table": f"{src_dir}/table.R",
-        "plot": f"{src_dir}/plot.R",
-        "pfunc": f"{src_dir}/pfunc.R",
-        "export": f"{src_dir}/export.R"
-    }
-
-
-# Executable Documentation
-def get_output_layout(token_id):
-    return {
-        "job_id":               f"{token_id}",
-        "outdir":               f"{token_id}",
-        "job_to_m8":            f"{token_id}/job_to_m8", #store_alignments
-        "job_to_homologs":      f"{token_id}/job_to_homologs", #store_homologs
-        "homolog_to_abun":      f"{token_id}/homolog_to_abun", #store_homolog_abun
-        "job_to_abun":          f"{token_id}/job_to_abun", #store_gene_family
-        "genus_to_abun":        f"{token_id}/genus_to_abun", #store_genera
     }
