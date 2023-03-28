@@ -35,44 +35,48 @@ For each result, MetaQuery produces a few plots:
 
 ### Abundance Plot
 
-- `{name}*.abundnace.png`: The abundance of {name} across gut microbiome samples.
+- `{name}.abundnace.png`: The abundance of `{name}` across gut microbiome samples.
 For taxonomic groups (e.g. species), abundance is defined as the proportion of cells that are from a taxonomic group.
 For functional groups (e.g. gene families), abundance is defined as the average copy-number of the function per cell.
 
-Left panel: the abundance of {name} was estimated across human gut metagenomes. Samples with an abundance of zero were assigned the smallest non-zero value.
-Right panel: the average abundance of {name} was compared to the average abundance of other groups at the same functional or taxonomic level.
+Left panel: the abundance of `{name}` was estimated across human gut metagenomes. Samples with an abundance of zero were assigned the smallest non-zero value.
+
+Right panel: the average abundance of `{name}` was compared to the average abundance of other groups at the same functional or taxonomic level.
 
 
 ### Prevalence Plot
 
-- `{name}.prevalence.png`: The prevalence of {name} across gut microbiome samples. Prevalence is defined at the percent of samples where {name} is found.
+- `{name}.prevalence.png`: The prevalence of `{name}` across gut microbiome samples. Prevalence is defined at the percent of samples where `{name}` is found.
 
-Left panel: the prevalence of {name} was estimated across human gut metagenomes at different abundance thresholds.
-Right panel: the prevalence of {name} at a minimum abundance of 0.001 was compared to the prevalence of other groups at the same functional or taxonomic level.
+Left panel: the prevalence of `{name}` was estimated across human gut metagenomes at different abundance thresholds.
+
+Right panel: the prevalence of `{name}` at a minimum abundance of 0.001 was compared to the prevalence of other groups at the same functional or taxonomic level.
+
 
 ### Boxplots of Association of Abundance with Clinical Phenotypes
 
-In addition, MetaQuery also generates a few figures of association of {name} abundance with clinical phenotypes.
-[Wilcoxon rank-sum tests](https://en.wikipedia.org/wiki/Mann-Whitney_U_test) were performed to determine if the abundance of {name} was different between cases and controls for several diseases (see table).
+In addition, MetaQuery also generates a few figures of association of `{name}` abundance with clinical phenotypes.
+[Wilcoxon rank-sum tests](https://en.wikipedia.org/wiki/Mann-Whitney_U_test) were performed to determine if the abundance of `{name}` was different between cases and controls for several diseases (see table).
 
 For each disease, case and control individuals were selected from the same country and individuals with co-morbities were excluded.
 
 See the <a href='./about.py#metagenomes'>documentation</a> for more information on these cohorts
 
-- p_value indicates whether there is a significant difference in the abundance of %(name)s between cases and controls.
-- rank and percentile indicate how the p_value for {name} compares to other functional or taxonomic groups.
+- `p_value` indicates whether there is a significant difference in the abundance of `{name}` between cases and controls.
+- `rank` and `percentile` indicate how the p_value for `{name}` compares to other functional or taxonomic groups.
+
 For example, a percentile of 5.0 indicates your p_value was more significant than 95%% of other functions or taxa.
 
 Boxplots include:
-- "*.Ulcerative colitis.Spain.png"
-- "*.Crohns disease.Spain.png"
-- "*/Obesity.Denmark.png"
-- "*/Type II diabetes.China.png"
-- "*/Type II diabetes.Denmark.png"
-- "*/Type II diabetes.Sweden.png"
-- "*/Liver cirrhosis.China.png">
-- "*/Rheumatoid arthritis.China.png"
-- "*/Colorectal cancer.Austria.png"
+- `{name}.Ulcerative colitis.Spain.png`
+- `{name}.Crohns disease.Spain.png`
+- `{name}/Obesity.Denmark.png`
+- `{name}/Type II diabetes.China.png`
+- `{name}/Type II diabetes.Denmark.png`
+- `{name}/Type II diabetes.Sweden.png`
+- `{name}/Liver cirrhosis.China.png`
+- `{name}/Rheumatoid arthritis.China.png`
+- `{name}/Colorectal cancer.Austria.png`
 
 
 ### Statistics
