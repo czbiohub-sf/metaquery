@@ -1,5 +1,5 @@
 job_id: MQ000001
-outdir: tests
+outdir: tests/by_seq
 molecule_type: protein
 max_evalue: 1e-5
 min_score: 70

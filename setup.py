@@ -2,7 +2,7 @@
 from setuptools import setup
 
 setup(name='metaquery',
-      version='1.1.0',
+      version='1.2.0',
       description='MetaQuery Query Sequence Abundance',
       url='https://github.com/czbiohub/metaquery',
       author='Chunyu Zhao and Stephen Nayfach',

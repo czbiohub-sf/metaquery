@@ -1,5 +1,11 @@
+.Rhistory
+.RData
 build/
 data/
 db/
 metaquery.egg-info/
-
+dist/
+tests/by_name/
+tests/by_seq/
+Rplots.pdf
+*__pycache__*

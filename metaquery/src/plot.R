@@ -19,6 +19,11 @@ outdir <- dirname(tempdir)
 # Main
 abun <- read.sample.abun(tempdir, job_id)
 back <- read.background.data(mydb, 'eggnog', 'gene_family')
+###### FINE .....
+abun <- as.data.frame(abun)
+back <- as.data.frame(back)
+
+
 plot.prevalence(abun, back, type='function', name=job_id)
 plot.abundance(abun, back, type='function', name=job_id)
 

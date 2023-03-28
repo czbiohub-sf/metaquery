@@ -1,0 +1,7 @@
+count genes in catalog: 9879900.0
+% complete genes: 57.74
+% from reference genomes: 2.46
+% annotated at phylum level: 21.31
+% annotated at genus level: 16.3
+% annotated by kegg: 42.1
+% annotated by eggNOG: 60.44
