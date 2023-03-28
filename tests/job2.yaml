@@ -1,9 +1,2 @@
-job_id: MQ000002
-outdir: tests
-molecule_type: dna
-max_evalue: 1e-5
-min_score: 70
-min_pid: 95
-min_qcov: 70
-min_tcov: 70
-threads: 8
+job_id: ""
+outdir: tests/by_name

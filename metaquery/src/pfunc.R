@@ -50,12 +50,13 @@ read.background.pvalues <- function(mydb, pheno, country, db, level){
 }
 
 compute.prev <- function(x){
+  # prevalence is computed based on copy_number
   df <- as.data.frame(matrix(nrow=0,ncol=0)); row <- 0
   copy_nums <- c(1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1e-0)
   for (min_copy in copy_nums){
     row <- row + 1
     df[row, 'min_copy'] <- min_copy
-    df[row, 'percent_samples'] <- 100*length(which(x >= min_copy))/length(x)
+    df[row, 'percent_samples'] <- 100*sum(x >= min_copy)/length(x)
   }
   return(df)
 }
@@ -151,8 +152,15 @@ plot.abundance <- function(abun, back, type, name){
   png(plot_name, width=width, height=width*0.5)
   set.par()
 
+  if ("copy_number" %in% colnames(abun)) {
+    plotdata = abun$copy_number
+  } else {
+    print("here")
+    plotdata = abun[,2]
+  }
+
   hist(
-    log10(abun[,2]), col='gray',
+    log10(plotdata), col='gray',
     xlab='', ylab='Number of Samples', main='',
     cex.lab=2, cex.axis=1.75,
     xaxt='n', breaks=30
@@ -170,7 +178,7 @@ plot.abundance <- function(abun, back, type, name){
   ranks <- seq(1, length(indexes))
   back[indexes, 'rank'] <- ranks
 
-  mean_abun <- mean(abun[,2])
+  mean_abun <- mean(plotdata)
   rank <- length(which(mean_abun < abuns)) + 1
   plot(
     ranks, log10(abuns),
