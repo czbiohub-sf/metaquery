@@ -92,6 +92,8 @@ Boxplots include:
 
 ### Search-by-Sequence
 
+For each job, MetaQuery assigned a random `job_id` and all the results can be found at the folder `metaquery_output_{job_id}`. 
+
 As mentioned in the above workflow, MetaQuery generateds the following tables accordingly: 
 - `homolog_table.tsv`
 - `homologs_abundance.tsv`
@@ -105,5 +107,5 @@ In addition, the users can also download the raw blast results `blast_results.ts
 
 MetaQuery returns a `search_results.tsv` table, listing `Query Type`, `Database`, `Level` and `Name`. 
 
-For each result, MetaQuery produces the above-mentioned figures, as well as the statistics table `pheno_table.tsv`.
+For each result, MetaQuery produces the above-mentioned figures to the folder `metaquery_output_{name}`, as well as the statistics table `pheno_table.tsv`.
 
