@@ -10,7 +10,7 @@ conda activate metaquery
 pip install .
 ```
 
-## Prepare DB
+## Prepare MetaQuery Database
 
 ```
 aws s3 cp --recursive s3://zhaoc1-metaquery/2022-metaquery/metaquery/db db
@@ -25,7 +25,18 @@ metaquery --search_by_sequence --query tests/query.fasta --job_yaml tests/job.ya
 metaquery --search_by_name --search_name "Bacteroides vulgatus" --job_yaml tests/job2.yaml
 ```
 
-## Search By NAME Expected Output
+## MetaQuery Workflow
+
+MetaQuery estimates the abundance of a query sequence across 1267 publicly available faecal metagenomes from human subjects.
+
+![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
+
+
+## Expected Output
+
+
+
+### Search-by-Name
 
 MetaQuery returns a `search_results.tsv` table, listing `Query Type`, `Database`,
 `Level` and `Name`.
