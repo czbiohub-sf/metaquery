@@ -20,7 +20,7 @@ build_homolog_table <- function(job_id) {
       col_types = cols())
 
   tab <- left_join(job_to_homologs, job_to_m8, by=c("job_id", "aln_id")) %>%
-    select(query_id, target_id, status, kegg, eggnog, phylum, genus, qcov, tcov, pid)
+    select(job_id, query_id, target_id, status, kegg, eggnog, phylum, genus, qcov, tcov, pid)
 
   count_homologs <- nrow(tab)
 

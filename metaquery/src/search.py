@@ -53,8 +53,8 @@ def report_by_name(args):
     # For each row of record, we would created a temp directory under the outdir directory
     nrows = len(rows)
     if nrows == 0:
-        print(f"\nSEARCH BY NAME::There are no results for search term {search_name}")
-        return
+        print(f"\nSEARCH BY NAME::EMPTY Results for search term {search_name}. Exit Now.")
+        return "EMPTY" # equivalent to empty blast results
     else:
         print(f"\nShowing {nrows} results for search term {search_name}. Full report table can be downloaded.")
 
@@ -125,6 +125,7 @@ def report_by_name(args):
         stream.write('\t'.join(header) + '\n')
         for _arg in list_of_rets:
             stream.write('\t'.join(map(str, _arg.values())) + '\n')
+    return "DONE"
 
 if __name__ == '__main__':
     main()
