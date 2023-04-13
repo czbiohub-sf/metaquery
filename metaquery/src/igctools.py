@@ -424,7 +424,7 @@ def run_pipeline(args):
     start = time.time()
     alignments = init_alignments(args, queries)
     if len(alignments) == 0:
-        print("Empty BLAST/RAPSEARCH Results. Exit Now")
+        print("EMPTY BLAST Search Results. Exit Now")
         return "EMPTY"
 
     store_alignments(args, alignments)

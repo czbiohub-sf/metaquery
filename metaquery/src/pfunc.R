@@ -75,10 +75,11 @@ set.par <- function(){
   par(bg = 'gray99')
 }
 
+
 plot.prevalence <- function(abun, back, type, name){
 
   width <- 1000
-  plot_name <- paste(outdir, paste(name, "prevalence", "png", sep="."), sep="/")
+  plot_name <- paste(outdir, paste("prevalence", "png", sep="."), sep="/") #name
   if (file.exists(plot_name)) file.remove(plot_name)
   png(plot_name, width=width, height = width*0.5)
   set.par()
@@ -147,7 +148,7 @@ plot.prevalence <- function(abun, back, type, name){
 plot.abundance <- function(abun, back, type, name){
 
   width <- 1000
-  plot_name <- paste(outdir, paste(name, "abundance", "png", sep="."), sep="/")
+  plot_name <- paste(outdir, paste("abundance", "png", sep="."), sep="/") #name
   if (file.exists(plot_name)) file.remove(plot_name)
   png(plot_name, width=width, height=width*0.5)
   set.par()
