@@ -27,9 +27,9 @@ metaquery --search_by_name --search_name "Bacteroides vulgatus" --job_yaml tests
 
 ## MetaQuery Workflow
 
-MetaQuery estimates the abundance of a query sequence across 1267 publicly available faecal metagenomes from human subjects.
+Figure S1: MetaQuery estimates the abundance of a query sequence across 1267 publicly available faecal metagenomes from human subjects.
 
-![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
+![alt text](https://github.com/czbiohub/metaquery/blob/main/FigureS1.png?raw=true)
 
 
 ## Expected Output
