@@ -101,6 +101,7 @@ def report_by_name(args):
         myargs2["mean_abundance"] = '%s' % float('%.2g' % myargs["mean_abundance"])
         myargs2["abundance_plot"] = plot_name + "/" + os.path.basename(myargs["abundance_plot"])
         myargs2["prevalence_plot"] = plot_name + "/" + os.path.basename(myargs["prevalence_plot"])
+        myargs2.pop("plotdir")
         list_of_rets.append(myargs2)
 
         ############# build_pheno_table
