@@ -69,6 +69,7 @@ def report_by_name(args):
 
         ## Output Directory
         plot_dir = tempfile.mkdtemp(dir=outdir)
+        os.chmod(plot_dir, 02775)
         plot_name = os.path.basename(plot_dir)
         myargs['plotdir'] = plot_dir
 
