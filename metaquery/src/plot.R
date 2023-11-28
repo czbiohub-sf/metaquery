@@ -34,7 +34,9 @@ for (i in seq(nrow(phenos))){
   country <- phenos[i,'country']
   back <- read.background.pvalues(mydb, pheno, country, 'eggnog', 'gene_family')
   abun <- read.pheno.data(tempdir, mydb, job_id, pheno, country)
-  plot.pheno.association(abun, back, type='function', name=paste(pheno, country, sep='.')) #job_id
+  if (nrow(filter(abun, abundance>0)) > 0) {
+    plot.pheno.association(abun, back, type='function', name=paste(pheno, country, sep='.')) #job_id
+  }
 }
 
 dbDisconnect(mydb)
